@@ -71,7 +71,7 @@ function analysisMsg(event) {
         msg =  event.source.userId
         return replayMsg(event,msg);
     case 'jp':
-        jp(event);
+        exchange(event,"JPY");
         break;
     case '波波':
         imgs = ['https://i.imgur.com/ymgGXkA.png'];
@@ -93,6 +93,9 @@ function analysisMsg(event) {
         //msg =  "ggggg"
         //return replayMsg(event,msg);
     }
+
+    //檢查是否是需要匯率
+    exchange(event,txt);
 
     return ;
 }
@@ -129,9 +132,29 @@ function replayImg(event,imgs,agree = false){
     });
 }
 
-
-
-function jp(event) {
+function exchange(event,currency) {
+    var currencyNum = 0;
+    switch(currency) {
+    case 'USD':
+        currencyNum = 1;
+        break;
+    case 'HKD':
+        currencyNum = 3;
+        break;
+    case 'JPY':
+        currencyNum = 15;
+        break;
+    case 'EUR':
+        currencyNum = 29;
+        break;
+    case 'CNY':
+        currencyNum = 37;
+        break;
+    default:
+        return;
+        //msg =  "ggggg"
+        //return replayMsg(event,msg);
+    }
   request({
     url: "http://rate.bot.com.tw/Pages/Static/UIP003.zh-TW.htm",
     method: "GET"
@@ -142,10 +165,10 @@ function jp(event) {
         // 爬完網頁後要做的事情
         var $ = cheerio.load(body);
         var target = $(".rate-content-sight.text-right.print_hide");
-        console.log(target[15].children[0].data);
-        var msg = "日幣匯率:"+target[15].children[0].data;
+        console.log(target[currencyNum].children[0].data);
+        var msg = currency+"/TWD 匯率:"+target[currencyNum].children[0].data;
         return replayMsg(event,msg);
         
     }
   });
-};
+}
