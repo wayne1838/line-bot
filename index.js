@@ -1,6 +1,12 @@
 
 let linebot = require('linebot'),
     express = require('express');
+
+
+var request = require("request");
+var cheerio = require("cheerio");
+var nodemailer = require('nodemailer');
+
 const config = require('./package.json'),
     util = require('util');
 let bot = linebot({
@@ -8,7 +14,8 @@ let bot = linebot({
     channelAccessToken: ''
 });
 //設定有權限的使用者ID
-let agreeID = ["Uf4bd6364fa8f00a5d8b779d8173b5ab7",]
+let agreeID = ["Uf4bd6364fa8f00a5d8b779d8173b5ab7",];
+
 const linebotParser = bot.parser(),
     app = express();
 app.post('/line', linebotParser);
@@ -20,7 +27,6 @@ let server = app.listen(process.env.PORT || 3000, function() {
         var userId = "Uf4bd6364fa8f00a5d8b779d8173b5ab7";
         var sendMsg = '開啟';
         bot.push(userId,sendMsg);
-         bot.push('wayne1838',sendMsg);
         console.log('send: '+sendMsg);
     },5000);
 });
@@ -64,8 +70,24 @@ function analysisMsg(event) {
     case 'id':
         msg =  event.source.userId
         return replayMsg(event,msg);
+    case 'jp':
+        jp(event);
+        break;
+    case '波波':
+        imgs = ['https://i.imgur.com/ymgGXkA.png'];
+        return replayImg(event,imgs);
+    case '狗':
+        imgs = ['https://i.imgur.com/6jHEGXt.png',
+        'https://i.imgur.com/dx38cy8.jpg',
+        'https://i.imgur.com/6Hd2TeQ.jpg',
+        'https://i.imgur.com/2rgRUeP.jpg',
+        'https://i.imgur.com/km9BZZ5.jpg',
+        'https://i.imgur.com/jkzUyjF.jpg',
+        'https://i.imgur.com/Hh2NX1m.jpg',
+        'https://i.imgur.com/l36y14Y.jpg',
+        ];
+        return replayImg(event,imgs);
     case 'gg':
-        msg =  event.source.userId
         return replayImg(event,imgs,true);
     default:
         //msg =  "ggggg"
@@ -74,7 +96,6 @@ function analysisMsg(event) {
 
     return ;
 }
-
 
 function replayMsg(event,msg,agree = false){
     if (agree == true && agreeID.indexOf(event.source.userId) == -1)
@@ -107,3 +128,24 @@ function replayImg(event,imgs,agree = false){
     previewImageUrl: imgs[num]
     });
 }
+
+
+
+function jp(event) {
+  request({
+    url: "http://rate.bot.com.tw/Pages/Static/UIP003.zh-TW.htm",
+    method: "GET"
+  }, function(error, response, body) {
+    if (error || !body) {
+      return "錯誤";
+    }else{
+        // 爬完網頁後要做的事情
+        var $ = cheerio.load(body);
+        var target = $(".rate-content-sight.text-right.print_hide");
+        console.log(target[15].children[0].data);
+        var msg = "日幣匯率:"+target[15].children[0].data;
+        return replayMsg(event,msg);
+        
+    }
+  });
+};
