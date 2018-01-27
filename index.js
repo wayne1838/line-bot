@@ -6,7 +6,7 @@ let linebot = require('linebot'),
 var request = require("request");
 var cheerio = require("cheerio");
 var nodemailer = require('nodemailer');
-
+var imgPTT=require("./img.js");
 const config = require('./package.json'),
     util = require('util');
 let bot = linebot({
@@ -71,11 +71,29 @@ function analysisMsg(event) {
         msg =  event.source.userId
         return replayMsg(event,msg);
     case 'jp':
-        exchange(event,"JPY");
+        exchange(event,'JPY');
         break;
+    case 't':
+        return template(event);
+    case '肥宅':
+        imgs = ['https://i.imgur.com/FqDgzOi.jpg'];
+        return replayImg(event,imgs);
+    case '大塊':
+        imgs = ['https://i.imgur.com/Cx9agyu.jpg'];
+        return replayImg(event,imgs);
     case '波波':
         imgs = ['https://i.imgur.com/ymgGXkA.png'];
         return replayImg(event,imgs);
+    case '旺旺仙貝':
+       imgs = ['https://i.imgur.com/vS5oVPS.jpg',
+        'https://i.imgur.com/BnK2vi0.jpg',
+        'https://i.imgur.com/VAb7tgu.jpg',
+        ];
+        return replayImg(event,imgs);
+    case 'ptt':
+        // BeautyPTT(event);
+        return replayImg(event,global.imgs);
+        break;
     case '狗':
         imgs = ['https://i.imgur.com/6jHEGXt.png',
         'https://i.imgur.com/dx38cy8.jpg',
@@ -90,8 +108,6 @@ function analysisMsg(event) {
     case 'gg':
         return replayImg(event,imgs,true);
     default:
-        //msg =  "ggggg"
-        //return replayMsg(event,msg);
     }
 
     //檢查是否是需要匯率
@@ -152,8 +168,6 @@ function exchange(event,currency) {
         break;
     default:
         return;
-        //msg =  "ggggg"
-        //return replayMsg(event,msg);
     }
   request({
     url: "http://rate.bot.com.tw/Pages/Static/UIP003.zh-TW.htm",
@@ -165,10 +179,41 @@ function exchange(event,currency) {
         // 爬完網頁後要做的事情
         var $ = cheerio.load(body);
         var target = $(".rate-content-sight.text-right.print_hide");
-        console.log(target[currencyNum].children[0].data);
         var msg = currency+"/TWD 匯率:"+target[currencyNum].children[0].data;
         return replayMsg(event,msg);
-        
     }
   });
 }
+
+
+function template(event){
+    return event.reply({
+    type: 'template',
+    altText: 'this is a buttons template',
+    template: {
+        type: 'buttons',
+        thumbnailImageUrl: 'https://example.com/bot/images/image.jpg',
+        title: 'Menu',
+        text: 'Please select',
+        actions: [{
+            type: 'postback',
+            label: 'Buy',
+            data: 'action=buy&itemid=123'
+        }, {
+            type: 'postback',
+            label: 'Add to cart',
+            data: 'action=add&itemid=123'
+        }, {
+            type: 'uri',
+            label: 'View detail',
+            uri: 'http://example.com/page/123'
+        }]
+    }
+});
+}
+
+
+
+
+
+
