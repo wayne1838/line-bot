@@ -1,8 +1,8 @@
 
 let linebot = require('linebot'),
     express = require('express');
-
-
+var common=require("./common.js");
+const fs = require("fs"); // 流
 var request = require("request");
 var cheerio = require("cheerio");
 var nodemailer = require('nodemailer');
@@ -10,11 +10,11 @@ var imgPTT=require("./img.js");
 const config = require('./package.json'),
     util = require('util');
 let bot = linebot({
-    channelSecret: '',
-    channelAccessToken: ''
+    channelSecret: '2c1016ab2d465bfe3045a6db1718ec6d',
+    channelAccessToken: 'KQktopegf2akiZ5CHi6WJ2bEFea/PaqNNKC7r9I4XaGNQKl6aOH9D1JyqvTatDn/OoY6cmiCB2rIfm11LkesIgLE/T025uWlmlFhOBvX6aF7Ehguw6MV1jXP5RMySzQTIfCZYSXitQtL/U3DDhZEHgdB04t89/1O/w1cDnyilFU='
 });
 //設定有權限的使用者ID
-let agreeID = ["Uf4bd6364fa8f00a5d8b779d8173b5ab7",];
+let agreeID = ["Uf4bd6364fa8f00a5d8b779d8173b5ab7","Uef5b83b111745ae5d6c9198b61363d44"];
 
 const linebotParser = bot.parser(),
     app = express();
@@ -36,10 +36,11 @@ bot.on('message', function(event) {
   if (event.message.type = 'text') {
     // 把收到訊息的 event 印出來
     console.log(event.source.userId + ' :' + event.message.text);
-    //replayMsg(event);
+    //common.replayMsg(event);
     analysisMsg(event);
   }
 });
+
 
 function analysisMsg(event) {
     //解析訊息
@@ -55,47 +56,63 @@ function analysisMsg(event) {
         'https://i.imgur.com/JSzsAQP.jpg',
         'https://i.imgur.com/pFFZpC1.jpg',
         ];
-    switch(txt) {
+
+    switch(txt.toLowerCase()) {
     case '?':
         imgs = ['https://i.imgur.com/CmN8KXq.jpg'];
-        return replayImg(event,imgs);
+        return common.replayImg(event,imgs);
     case '1':
-        return replayImg(event,imgs);
+        return common.replayImg(event,imgs);
     case '2':
         msg =  "安安，怎麼了??"
-        return replayMsg(event,msg);
+        getimg.start();
+        return common.replayMsg(event,msg);
     case '你好':
         msg =  "安安"
-        return replayMsg(event,msg);
+        return common.replayMsg(event,msg);
     case 'id':
         msg =  event.source.userId
-        return replayMsg(event,msg);
+        return common.replayMsg(event,msg);
     case 'jp':
         exchange(event,'JPY');
         break;
+    case 'HAHA':
+        // BeautyPTT(event);
+        return HAHA(event);
     case 't':
         return template(event);
     case '肥宅':
         imgs = ['https://i.imgur.com/FqDgzOi.jpg'];
-        return replayImg(event,imgs);
+        return common.replayImg(event,imgs);
     case '大塊':
-        imgs = ['https://i.imgur.com/Cx9agyu.jpg'];
-        return replayImg(event,imgs);
+        imgs = ['https://i.imgur.com/Cx9agyu.jpg',
+        'https://i.imgur.com/KuE0i5J.png',
+        'https://i.imgur.com/rN2taZ6.jpg'];
+        return common.replayImg(event,imgs);
+    case '車干':
+        imgs = ['https://i.imgur.com/bZY2D65.jpg'];
+        return common.replayImg(event,imgs);    
     case '波波':
-        imgs = ['https://i.imgur.com/ymgGXkA.png'];
-        return replayImg(event,imgs);
+        imgs = ['https://i.imgur.com/ymgGXkA.png',
+        'https://i.imgur.com/7lPKmdN.jpg',
+        'https://i.imgur.com/t2Tf1qa.jpg',
+        'https://i.imgur.com/u1d7wQv.jpg',
+        'https://i.imgur.com/5OL3Bdq.jpg'];
+        return common.replayImg(event,imgs);
     case '旺旺仙貝':
        imgs = ['https://i.imgur.com/vS5oVPS.jpg',
         'https://i.imgur.com/BnK2vi0.jpg',
         'https://i.imgur.com/VAb7tgu.jpg',
         ];
-        return replayImg(event,imgs);
+        return common.replayImg(event,imgs);
+    case '抽':
+    case '抽卡':    
     case 'ptt':
         // BeautyPTT(event);
-        return replayImg(event,global.imgs);
+        return common.replayImg(event,global.imgs);
         break;
     case '狗':
-        imgs = ['https://i.imgur.com/6jHEGXt.png',
+       imgs = ['https://i.imgur.com/6jHEGXt.png',
         'https://i.imgur.com/dx38cy8.jpg',
         'https://i.imgur.com/6Hd2TeQ.jpg',
         'https://i.imgur.com/2rgRUeP.jpg',
@@ -104,53 +121,20 @@ function analysisMsg(event) {
         'https://i.imgur.com/Hh2NX1m.jpg',
         'https://i.imgur.com/l36y14Y.jpg',
         ];
-        return replayImg(event,imgs);
+        return common.replayImg(event,imgs);
     case 'gg':
-        return replayImg(event,imgs,true);
+        return common.replayImg(event,imgs,true);
     default:
     }
-
-    //檢查是否是需要匯率
-    exchange(event,txt);
-
+        //檢查是否是需要匯率
+        exchange(event,txt);
     return ;
 }
 
-function replayMsg(event,msg,agree = false){
-    if (agree == true && agreeID.indexOf(event.source.userId) == -1)
-    {//agree == true 檢查權限 沒有權限則離開
-        return ;
-    }
-    //回傳msg
-    return event.reply(msg).then(function(data) {
-      // success
-      console.log(msg);
-    }).catch(function(error) {
-      // error
-      console.log('error');
-    });
-}
-
-function replayImg(event,imgs,agree = false){
-    if (agree == true && agreeID.indexOf(event.source.userId) == -1)
-    {//agree == true 檢查權限 沒有權限則離開
-        return ;
-    }
-    //取得隨機數
-    var num = Math.ceil(Math.random()*imgs.length)-1;
-
-    console.log('random = '+num);
-    //回傳圖片
-    return event.reply({
-    type: 'image',
-    originalContentUrl: imgs[num],
-    previewImageUrl: imgs[num]
-    });
-}
 
 function exchange(event,currency) {
     var currencyNum = 0;
-    switch(currency) {
+    switch(currency.toUpperCase()) {
     case 'USD':
         currencyNum = 1;
         break;
@@ -180,40 +164,74 @@ function exchange(event,currency) {
         var $ = cheerio.load(body);
         var target = $(".rate-content-sight.text-right.print_hide");
         var msg = currency+"/TWD 匯率:"+target[currencyNum].children[0].data;
-        return replayMsg(event,msg);
+        return common.replayMsg(event,msg);
     }
   });
 }
 
 
-function template(event){
-    return event.reply({
-    type: 'template',
-    altText: 'this is a buttons template',
-    template: {
-        type: 'buttons',
-        thumbnailImageUrl: 'https://example.com/bot/images/image.jpg',
-        title: 'Menu',
-        text: 'Please select',
-        actions: [{
-            type: 'postback',
-            label: 'Buy',
-            data: 'action=buy&itemid=123'
-        }, {
-            type: 'postback',
-            label: 'Add to cart',
-            data: 'action=add&itemid=123'
-        }, {
-            type: 'uri',
-            label: 'View detail',
-            uri: 'http://example.com/page/123'
-        }]
+
+function HAHA(event) {
+    //取得傲游哈哈趣圖
+  request({
+    url: "https://www.haha.mx/good/day/"+common.randomNum(38), 
+    method: "GET"
+  }, function(error, response, body) {
+    if (error || !body) {
+      return "錯誤";
+    }else{
+        // 爬完網頁後要做的事情
+        var $ = cheerio.load(body);
+        var img = $(".joke-main-img").attr('src');
+        console.log('img:'+img);
+        //取代中間字串取得大圖
+
+        var src = ["https:"+img.replace("small", "big")];
+        
+        return common.replayImg(event,src);
     }
-});
+  });
 }
 
-
-
-
+function HAHA1(event) {
+    //取得傲游哈哈趣圖 未完成
+  request({
+    url: "http://rinakawaei.blogspot.tw/2015/04/part1.html",
+    method: "GET"
+  }, function(error, response, body) {
+    if (error || !body) {
+      return "錯誤";
+    }else{
+        // 爬完網頁後要做的事情
+        var $ = cheerio.load(body);
+        // fs.writeFile("body.txt", body, function(err) {
+        //     if(err) {
+        //         console.log(err);
+        //     } else {
+        //         console.log("The file was saved!");
+        //     }
+        // });
+        img = $(".separator a")
+        // for (i=0;i<=20;i++){
+            
+        //     img = $(".separator a")[i];
+           
+        //     console.log('img:'+img);
+        //     if (img != null) break;
+        // }
+        // fs.writeFile("img.txt", img, function(err) {
+        //     if(err) {
+        //         console.log(err);
+        //     } else {
+        //         console.log("The file was saved!");
+        //     }
+        // });
+        var src = [img.attr("href")];
+        console.log('img:'+img.attr("href"));
+        // return common.replayImg(event,src);
+        return common.replayImg(event,["http://3.bp.blogspot.com/-qVKrfypbxrQ/VSuSkmJ7bdI/AAAAAAAANJo/oq3w1-2mWGA/s1600/FireShot%2BScreen%2BCapture%2B%23076%2B-%2B%2B-%2Btwitter_com___eatchan_status_575277636299046912.png"]);
+    }
+  });
+}
 
 
