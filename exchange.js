@@ -1,6 +1,6 @@
 
 //匯率爬蟲
-function get(currency) {
+exports.getCurrency = function (currency) {
     var currencyNum = 0;
     switch(currency.toUpperCase()) {
     case 'USD':

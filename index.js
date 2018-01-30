@@ -122,7 +122,7 @@ function analysisMsg(event) {
         ];
         return common.replayImg(event,imgs);
     case 'jp':
-        var msg = exchange.get('JPY');
+        var msg = exchange.getCurrency('JPY');
         if (msg != ''){
             return common.replayMsg(event,msg);
         }
@@ -132,7 +132,7 @@ function analysisMsg(event) {
     default:
     }
         //檢查是否是需要匯率
-        exchange.get(txt);
+        exchange.getCurrency(txt);
     return ;
 }
 

@@ -1,5 +1,5 @@
 
-function replayMsg(event,msg,agree = false){
+exports.replayMsg = function (event,msg,agree = false){
     if (agree == true && agreeID.indexOf(event.source.userId) == -1)
     {//agree == true 檢查權限 沒有權限則離開
         return ;
@@ -14,13 +14,13 @@ function replayMsg(event,msg,agree = false){
     });
 }
 
-function replayImg(event,imgs,agree = false){
+exports.replayImg = function (event,imgs,agree = false){
     if (agree == true && agreeID.indexOf(event.source.userId) == -1)
     {//agree == true 檢查權限 沒有權限則離開
         return ;
     }
     //取得隨機數
-    var num = randomNum(imgs.length)-1;
+    var num = exports.randomNum(imgs.length)-1;
 
     console.log('random = '+num);
     //回傳圖片
@@ -31,7 +31,7 @@ function replayImg(event,imgs,agree = false){
     });
 }
 
-function template(event){
+exports.template = function (event){
     //選擇方塊 測試中 未完成
     return event.reply({
     type: 'template',
@@ -58,7 +58,7 @@ function template(event){
 });
 }
 
-function randomNum(max){
+exports.randomNum = function (max){
     //取得隨機數
     var num = Math.ceil(Math.random()*max);
     return num;
