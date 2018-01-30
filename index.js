@@ -2,6 +2,8 @@
 let linebot = require('linebot'),
     express = require('express');
 var common=require("./common.js");
+var getimg=require("./getimg.js");
+var exchange=require("./exchange.js");
 const fs = require("fs"); // 流
 var request = require("request");
 var cheerio = require("cheerio");
@@ -73,9 +75,6 @@ function analysisMsg(event) {
     case 'id':
         msg =  event.source.userId
         return common.replayMsg(event,msg);
-    case 'jp':
-        exchange(event,'JPY');
-        break;
     case 'HAHA':
         // BeautyPTT(event);
         return HAHA(event);
@@ -122,52 +121,23 @@ function analysisMsg(event) {
         'https://i.imgur.com/l36y14Y.jpg',
         ];
         return common.replayImg(event,imgs);
+    case 'jp':
+        var msg = exchange.get('JPY');
+        if (msg != ''){
+            return common.replayMsg(event,msg);
+        }
+        break;
     case 'gg':
         return common.replayImg(event,imgs,true);
     default:
     }
         //檢查是否是需要匯率
-        exchange(event,txt);
+        exchange.get(txt);
     return ;
 }
 
 
-function exchange(event,currency) {
-    var currencyNum = 0;
-    switch(currency.toUpperCase()) {
-    case 'USD':
-        currencyNum = 1;
-        break;
-    case 'HKD':
-        currencyNum = 3;
-        break;
-    case 'JPY':
-        currencyNum = 15;
-        break;
-    case 'EUR':
-        currencyNum = 29;
-        break;
-    case 'CNY':
-        currencyNum = 37;
-        break;
-    default:
-        return;
-    }
-  request({
-    url: "http://rate.bot.com.tw/Pages/Static/UIP003.zh-TW.htm",
-    method: "GET"
-  }, function(error, response, body) {
-    if (error || !body) {
-      return "錯誤";
-    }else{
-        // 爬完網頁後要做的事情
-        var $ = cheerio.load(body);
-        var target = $(".rate-content-sight.text-right.print_hide");
-        var msg = currency+"/TWD 匯率:"+target[currencyNum].children[0].data;
-        return common.replayMsg(event,msg);
-    }
-  });
-}
+
 
 
 
