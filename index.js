@@ -31,6 +31,9 @@ let server = app.listen(process.env.PORT || 3000, function() {
         bot.push(userId,sendMsg);
         console.log('send: '+sendMsg);
     },5000);
+
+     //每小時檢查匯率
+    setInterval(checkExchange,3600000);
 });
 
 
@@ -136,7 +139,15 @@ function analysisMsg(event) {
     return ;
 }
 
-
+function checkExchange(){
+	//匯率低於參數 則通知
+	var jpy = exchange.getCurrency("jpy");
+	if(jpy <0.267){
+		var userId = "Uf4bd6364fa8f00a5d8b779d8173b5ab7";
+		var sendMsg = "目前日幣匯率低於"+jpy;
+        bot.push(userId,sendMsg);
+	}
+}
 
 
 
