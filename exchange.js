@@ -1,6 +1,8 @@
-
+var request = require("request");
+var cheerio = require("cheerio");
+var common=require("./common.js");
 //匯率爬蟲
-exports.getCurrency = function (currency) {
+exports.getCurrency = function (event,currency) {
     var currencyNum = 0;
     switch(currency.toUpperCase()) {
     case 'USD':
@@ -32,7 +34,8 @@ exports.getCurrency = function (currency) {
         var $ = cheerio.load(body);
         var target = $(".rate-content-sight.text-right.print_hide");
         var msg = currency+"/TWD 匯率:"+target[currencyNum].children[0].data;
-        return msg;
+        return common.replayMsg(event,msg);
+        
     }
   });
 }

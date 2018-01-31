@@ -2,7 +2,6 @@
 let linebot = require('linebot'),
     express = require('express');
 var common=require("./common.js");
-var getimg=require("./getimg.js");
 var exchange=require("./exchange.js");
 const fs = require("fs"); // 流
 var request = require("request");
@@ -125,11 +124,7 @@ function analysisMsg(event) {
         ];
         return common.replayImg(event,imgs);
     case 'jp':
-        var msg = exchange.getCurrency('JPY');
-        if (msg != ''){
-            return common.replayMsg(event,msg);
-        }
-        break;
+        return exchange.getCurrency(event,'JPY');
     case 'gg':
         return common.replayImg(event,imgs,true);
     default:
