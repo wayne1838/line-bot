@@ -4,20 +4,20 @@ var common=require("./common.js");
 //匯率爬蟲
 exports.getCurrency = function (event,currency) {
     var currencyNum = 0;
-    switch(currency.toUpperCase()) {
-    case 'USD':
+    switch(currency) {
+    case 'usd':
         currencyNum = 1;
         break;
-    case 'HKD':
+    case 'hkd':
         currencyNum = 3;
         break;
-    case 'JPY':
+    case 'jpy':
         currencyNum = 15;
         break;
-    case 'EUR':
+    case 'eur':
         currencyNum = 29;
         break;
-    case 'CNY':
+    case 'cny':
         currencyNum = 37;
         break;
     default:
