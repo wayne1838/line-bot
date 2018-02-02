@@ -130,7 +130,7 @@ function analysisMsg(event) {
     default:
     }
         //檢查是否是需要匯率
-        exchange.getCurrency(txt);
+        exchange.getCurrency(event,txt);
     return ;
 }
 

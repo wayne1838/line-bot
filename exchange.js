@@ -1,8 +1,9 @@
 var request = require("request");
 var cheerio = require("cheerio");
 var common=require("./common.js");
+//node js 模組化 http://www.cnblogs.com/dolphinX/p/3485260.html
 //匯率爬蟲
-exports.getCurrency = function (event,currency) {
+function getCurrency(event,currency) {
     var currencyNum = 0;
     switch(currency) {
     case 'usd':
@@ -39,3 +40,5 @@ exports.getCurrency = function (event,currency) {
     }
   });
 }
+
+exports.getCurrency = getCurrency;
