@@ -4,7 +4,7 @@ var common=require("./common.js");
 //node js 模組化 http://www.cnblogs.com/dolphinX/p/3485260.html
 //匯率爬蟲
 function getCurrency(event,currency) {
-    console.log("IN"+currency);
+    console.log("currency"+currency);
     var currencyNum = 0;
     switch(currency) {
     case 'usd':

@@ -22,23 +22,7 @@ let bot = linebot({
 let agreeID = ["Uf4bd6364fa8f00a5d8b779d8173b5ab7","Uef5b83b111745ae5d6c9198b61363d44"];
 
 
-//參數
-var timer;
-var pm = [];
-_getJSON();
-function _getJSON() {
-  clearTimeout(timer);
-  getJSON('http://opendata2.epa.gov.tw/AQX.json', function(error, response) {
-    response.forEach(function(e, i) {
-      pm[i] = [];
-      pm[i][0] = e.SiteName;
-      pm[i][1] = e['PM2.5'] * 1;
-      pm[i][2] = e.PM10 * 1;
-    });
-  });
-  timer = setInterval(_getJSON, 1800000); //每半小時抓取一次新資料
-}
-// pm = PM2_5._getJSON();
+
 
 const linebotParser = bot.parser(),
     app = express();
@@ -56,7 +40,15 @@ let server = app.listen(process.env.PORT || 3000, function() {
 
      //每小時檢查匯率
     setInterval(checkExchange,3600000);
+    //setInterval(function(){  PM2_5._getJSON();console.log('KKK');}, 1800);
+    PM2_5._getJSON();
 });
+
+
+
+
+
+
 
 
 bot.on('message', function(event) {
@@ -85,7 +77,7 @@ function analysisMsg(event) {
         ];
 
     if (txt.indexOf('PM2.5') != -1) {
-        pm.forEach(function(e, i) {
+        PM2_5.pm.forEach(function(e, i) {
           if (txt.indexOf(e[0]) != -1) {
             msg = e[0] + '的 PM2.5 數值為 ' + e[1];
             return common.replayMsg(event,msg);
