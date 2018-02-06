@@ -2,13 +2,17 @@
 let linebot = require('linebot'),
     express = require('express');
 var common=require("./common.js");
+var PM2_5=require("./pm2.5.js");
 var exchange=require("./exchange.js");
 const fs = require("fs"); // 流
 var request = require("request");
 var cheerio = require("cheerio");
 var nodemailer = require('nodemailer');
 var imgPTT=require("./img.js");
+var getJSON = require('get-json'); //FOR PM2.5
+
 const config = require('./package.json'),
+
     util = require('util');
 let bot = linebot({
     channelSecret: '2c1016ab2d465bfe3045a6db1718ec6d',
@@ -16,6 +20,25 @@ let bot = linebot({
 });
 //設定有權限的使用者ID
 let agreeID = ["Uf4bd6364fa8f00a5d8b779d8173b5ab7","Uef5b83b111745ae5d6c9198b61363d44"];
+
+
+//參數
+var timer;
+var pm = [];
+_getJSON();
+function _getJSON() {
+  clearTimeout(timer);
+  getJSON('http://opendata2.epa.gov.tw/AQX.json', function(error, response) {
+    response.forEach(function(e, i) {
+      pm[i] = [];
+      pm[i][0] = e.SiteName;
+      pm[i][1] = e['PM2.5'] * 1;
+      pm[i][2] = e.PM10 * 1;
+    });
+  });
+  timer = setInterval(_getJSON, 1800000); //每半小時抓取一次新資料
+}
+// pm = PM2_5._getJSON();
 
 const linebotParser = bot.parser(),
     app = express();
@@ -60,6 +83,19 @@ function analysisMsg(event) {
         'https://i.imgur.com/JSzsAQP.jpg',
         'https://i.imgur.com/pFFZpC1.jpg',
         ];
+
+    if (txt.indexOf('PM2.5') != -1) {
+        pm.forEach(function(e, i) {
+          if (txt.indexOf(e[0]) != -1) {
+            msg = e[0] + '的 PM2.5 數值為 ' + e[1];
+            return common.replayMsg(event,msg);
+          }
+        });
+        if (msg == '') {
+          msg = '請輸入正確的地點';
+          return common.replayMsg(event,msg);
+        }
+      }
 
     switch(txt.toLowerCase()) {
     case '?':
@@ -124,7 +160,7 @@ function analysisMsg(event) {
         ];
         return common.replayImg(event,imgs);
     case 'jp':
-        return exchange.getCurrency(event,'JPY');
+        return exchange.getCurrency(event,'jpy');
     case 'gg':
         return common.replayImg(event,imgs,true);
     default:
