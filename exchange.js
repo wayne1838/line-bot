@@ -99,7 +99,7 @@ function getExchangeData(currency) {//取得幣別匯率資料
         break;
     default:
         currencyNum = 15;
-        break '';
+        break;
     };
     return currencyData[currencyNum];
 }

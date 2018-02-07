@@ -39,9 +39,11 @@ let server = app.listen(process.env.PORT || 3000, function() {
     },5000);
 
      //每小時檢查匯率
-    setInterval(checkExchange,3600000);
+    //setInterval(exchange.checkExchange,3600000);
+    exchange.checkExchange();
     //setInterval(function(){  PM2_5._getJSON();console.log('KKK');}, 1800);
     PM2_5._getJSON();//取得pm2.5內容
+    PM2_5._getRain();
 });
 
 
@@ -69,7 +71,7 @@ function analysisMsg(event) {
         return ;
     }
 
-    var msg = '?';
+    var msg = '';
     var imgs = ['https://imgur.com/GfozkL2.jpg',
         'https://cdn2.ettoday.net/images/2457/d2457713.jpg',
         'https://luna.komica.org/12/src/1516616711084.jpg',
@@ -84,12 +86,35 @@ function analysisMsg(event) {
     if (txt.indexOf('PM2.5') != -1) {
         PM2_5.pm2_5.forEach(function(e, i) {
           if (txt.indexOf(e[0]) != -1) {
-            msg = e[0] + '的 PM2.5 數值為 ' + e[1];
+            msg = e[0] + '的 PM2.5 數值為 ' + e[1]+',時間:'+e[2];
             return common.replayMsg(event,msg);
           }
         });
         if (msg == '') {
-          msg = '請輸入正確的地點';
+          msg = '請輸入正確的地點 如 "松山的PM2.5"';
+          return common.replayMsg(event,msg);
+        }
+      }
+
+    if (txt.indexOf('下雨') != -1) {
+        PM2_5.rainData.forEach(function(e, i) {
+          if (txt.indexOf(e[0]) != -1) {
+            if (e[1] > 0) { 
+                msg = e[0] + '正在下雨' 
+            }else if (e[2] > 0){
+                msg = e[0] + '一小時內曾經下雨'
+            }else if (e[3] > 0){
+                msg = e[0] + '不久前曾經下雨'
+            }else if (e[3] = 0){
+                msg = e[0] + '沒有下雨'
+            }else{
+                msg = '資料錯誤'
+            }
+            return common.replayMsg(event,msg);
+          }
+        });
+        if (msg == '') {
+          msg = '請輸入正確的地點 如 "松山的PM2.5"';
           return common.replayMsg(event,msg);
         }
       }
