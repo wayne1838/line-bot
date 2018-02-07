@@ -65,6 +65,10 @@ function analysisMsg(event) {
     //解析訊息
     //圖片出處 https://meteor.today/a/mHfzMQ
     var txt = event.message.text;
+     if(!txt){//如果為undefined or null
+        return ;
+    }
+
     var msg = '?';
     var imgs = ['https://imgur.com/GfozkL2.jpg',
         'https://cdn2.ettoday.net/images/2457/d2457713.jpg',
@@ -76,6 +80,7 @@ function analysisMsg(event) {
         'https://i.imgur.com/pFFZpC1.jpg',
         ];
 
+    //pm2.5
     if (txt.indexOf('PM2.5') != -1) {
         PM2_5.pm2_5.forEach(function(e, i) {
           if (txt.indexOf(e[0]) != -1) {
@@ -153,6 +158,9 @@ function analysisMsg(event) {
         return common.replayImg(event,imgs);
     case 'jp':
         return exchange.reExhangeMsg(event,'jpy');
+    case '匯率':
+    	msg =  "請輸入要查詢匯率的幣別的英文，如[日幣]請輸入:jpy";
+        return common.replayMsg(event,msg);
     case 'gg':
         return common.replayImg(event,imgs,true);
     default:
