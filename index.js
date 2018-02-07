@@ -77,7 +77,7 @@ function analysisMsg(event) {
         ];
 
     if (txt.indexOf('PM2.5') != -1) {
-        PM2_5.pm.forEach(function(e, i) {
+        PM2_5.pm2_5.forEach(function(e, i) {
           if (txt.indexOf(e[0]) != -1) {
             msg = e[0] + '的 PM2.5 數值為 ' + e[1];
             return common.replayMsg(event,msg);
@@ -152,13 +152,13 @@ function analysisMsg(event) {
         ];
         return common.replayImg(event,imgs);
     case 'jp':
-        return exchange.getCurrency(event,'jpy');
+        return exchange.reExhangeMsg(event,'jpy');
     case 'gg':
         return common.replayImg(event,imgs,true);
     default:
     }
         //檢查是否是需要匯率
-        exchange.getCurrency(event,txt);
+        exchange.reExhangeMsg(event,txt);
     return ;
 }
 
@@ -176,15 +176,7 @@ console.log(weathers)
 //-----------------------------------------------------
 //以下功能未完成
 
-function checkExchange(){
-	//匯率低於參數 則通知
-	var jpy = exchange.getCurrency("jpy");
-	if(jpy <0.267){
-		var userId = "Uf4bd6364fa8f00a5d8b779d8173b5ab7";
-		var sendMsg = "目前日幣匯率低於"+jpy;
-        bot.push(userId,sendMsg);
-	}
-}
+
 
 function HAHA(event) {
     //取得傲游哈哈趣圖

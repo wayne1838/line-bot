@@ -5,7 +5,7 @@ var cheerio = require("cheerio");
 var getJSON = require('get-json'); //FOR PM2.5
 
 var timer;
-var pm =[];
+var pm2_5 =[];
 
 
 function _getJSON() {
@@ -13,16 +13,18 @@ function _getJSON() {
   getJSON('http://opendata2.epa.gov.tw/AQX.json', function(error, response) {
     response.forEach(function(e, i) {
        //console.log("PM");
-      pm[i] = [];
-      pm[i][0] = e.SiteName;
-      pm[i][1] = e['PM2.5'] * 1;
-      pm[i][2] = e.PM10 * 1;
+      pm2_5[i] = [];
+      pm2_5[i][0] = e.SiteName;
+      pm2_5[i][1] = e['PM2.5'] * 1;
+      pm2_5[i][2] = e.PM10 * 1;
     });
   });
   console.log("PM");
   timer = setInterval(_getJSON, 1800000); //每半小時抓取一次新資料
 }
-//下雨 http://opendata.epa.gov.tw/ws/Data/RainTenMin/?$orderby=PublishTime%20desc&$skip=0&$top=1000&format=json
+//下雨 氣象meteorology  http://opendata.epa.gov.tw/ws/Data/RainTenMin/?$orderby=PublishTime%20desc&$skip=0&$top=1000&format=json
 
-exports.pm =  pm;
+
+
+exports.pm2_5 =  pm2_5;
 exports._getJSON =  _getJSON;
