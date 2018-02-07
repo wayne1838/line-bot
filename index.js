@@ -41,7 +41,7 @@ let server = app.listen(process.env.PORT || 3000, function() {
      //每小時檢查匯率
     setInterval(checkExchange,3600000);
     //setInterval(function(){  PM2_5._getJSON();console.log('KKK');}, 1800);
-    PM2_5._getJSON();
+    PM2_5._getJSON();//取得pm2.5內容
 });
 
 
@@ -162,6 +162,20 @@ function analysisMsg(event) {
     return ;
 }
 
+//測試中的功能
+//////-----------------------------------------------
+request('http://www.cwb.gov.tw/V7/forecast/taiwan/Taipei_City.htm', (err, res, body) => {
+  // 把 body 放進 cheerio 準備分析
+const $ = cheerio.load(body)
+let weathers = []
+$('#box8 .FcstBoxTable01 tbody tr').each(function(i, elem) {
+  weathers.push($(this).text().split('\n'))
+})
+console.log(weathers)
+})
+//-----------------------------------------------------
+//以下功能未完成
+
 function checkExchange(){
 	//匯率低於參數 則通知
 	var jpy = exchange.getCurrency("jpy");
@@ -171,9 +185,6 @@ function checkExchange(){
         bot.push(userId,sendMsg);
 	}
 }
-
-
-
 
 function HAHA(event) {
     //取得傲游哈哈趣圖
