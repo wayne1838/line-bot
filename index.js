@@ -127,7 +127,7 @@ function analysisMsg(event) {
         return common.replayImg(event,imgs);
     case '2':
         msg =  "安安，怎麼了??"
-        getimg.start();
+        //getimg.start(); 測試中
         return common.replayMsg(event,msg);
     case '你好':
         msg =  "安安"
@@ -139,7 +139,7 @@ function analysisMsg(event) {
         // BeautyPTT(event);
         return HAHA(event);
     case 't':
-        return template(event);
+        return common.template(event);
     case '肥宅':
         imgs = ['https://i.imgur.com/FqDgzOi.jpg'];
         return common.replayImg(event,imgs);
