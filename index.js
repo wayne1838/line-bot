@@ -107,9 +107,11 @@ function analysisMsg(event) {
                 msg = e[0] + '一小時內曾經下雨[' +e[4] + ']'
             }else if (e[3] > 0){
                 msg = e[0] + '不久前曾經下雨[' +e[4] + ']'
-            }else if (e[3] = 0){
+            }else if (e[3] == 0){
                 msg = e[0] + '沒有下雨[' +e[4] + ']'
             }else{
+
+                console.log(e[3]);
                 msg = '資料錯誤或該地區無觀測站，請指定地區如 松山下雨'
             }
             return common.replayMsg(event,msg);
