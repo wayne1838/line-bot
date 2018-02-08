@@ -96,7 +96,7 @@ function analysisMsg(event) {
         }
       }
 
-    if (txt.indexOf('下雨') != -1) {
+    if (txt.indexOf('下雨') != -1 || txt.indexOf('rain') != -1) {
         PM2_5.rainData.forEach(function(e, i) {
           if (txt.indexOf(e[0]) != -1) {
             if (e[1] > 0) { 
@@ -108,7 +108,7 @@ function analysisMsg(event) {
             }else if (e[3] = 0){
                 msg = e[0] + '沒有下雨'
             }else{
-                msg = '資料錯誤'
+                msg = '資料錯誤或該地區無觀測站，請指定地區如 松山下雨'
             }
             return common.replayMsg(event,msg);
           }

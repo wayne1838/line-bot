@@ -22,7 +22,7 @@ function _getJSON() {
     });
   });
   //console.log("PM");
-  if (pm2_5 == ""){//取得資料失敗 三十秒重試
+  if (!pm2_5){//取得資料失敗 三十秒重試
     timer = setInterval(_getJSON, 30000);
   }
   timer = setInterval(_getJSON, 1800000); //每半小時抓取一次新資料
@@ -41,7 +41,7 @@ function _getRain() {
       rainData[i][3] = e.Rainfall3hr ;
     });
   });
-  if (rainData == ""){//取得資料失敗 三十秒重試
+  if (!rainData){//取得資料失敗 三十秒重試
     timer = setInterval(_getRain, 30000);
   }
   timer = setInterval(_getRain, 1800000); //每半小時抓取一次新資料
