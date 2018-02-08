@@ -42,7 +42,7 @@ function _getRain() {
       rainData[i][1] = e.Rainfall10min;
       rainData[i][2] = e.Rainfall1hr ;
       rainData[i][3] = e.Rainfall3hr ;
-      rainData[i][4] = e.DataCreationDate ;
+      rainData[i][4] = e.PublishTime ;
     });
   });
   // if (rainData == ""){//取得資料失敗 三十秒重試
