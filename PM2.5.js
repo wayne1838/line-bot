@@ -13,6 +13,7 @@ function _getJSON() {
   clearTimeout(timer);
   //http://opendata2.epa.gov.tw/AQX.json--這網址好像是假資料?
   getJSON('http://opendata.epa.gov.tw/ws/Data/ATM00625/?$format=json', function(error, response) {
+    if (!response) {return;}
     response.forEach(function(e, i) {
        console.log("PM25"+ e.Site);
       pm2_5[i] = [];
@@ -33,6 +34,7 @@ function _getRain() {
   clearTimeout(timerRain);
   //http://opendata2.epa.gov.tw/AQX.json--這網址好像是假資料?
   getJSON('http://opendata.epa.gov.tw/ws/Data/RainTenMin/?$format=json', function(error, response) {
+     if (!response) {return;}
     response.forEach(function(e, i) {
        console.log("Rain"+ e.SiteName);
       rainData[i] = [];
@@ -40,6 +42,7 @@ function _getRain() {
       rainData[i][1] = e.Rainfall10min;
       rainData[i][2] = e.Rainfall1hr ;
       rainData[i][3] = e.Rainfall3hr ;
+      rainData[i][4] = e.DataCreationDate ;
     });
   });
   // if (rainData == ""){//取得資料失敗 三十秒重試

@@ -100,13 +100,13 @@ function analysisMsg(event) {
         PM2_5.rainData.forEach(function(e, i) {
           if (txt.indexOf(e[0]) != -1) {
             if (e[1] > 0) { 
-                msg = e[0] + '正在下雨' 
+                msg = e[0] + '正在下雨[' +e[4] + ']'
             }else if (e[2] > 0){
-                msg = e[0] + '一小時內曾經下雨'
+                msg = e[0] + '一小時內曾經下雨[' +e[4] + ']'
             }else if (e[3] > 0){
-                msg = e[0] + '不久前曾經下雨'
+                msg = e[0] + '不久前曾經下雨[' +e[4] + ']'
             }else if (e[3] = 0){
-                msg = e[0] + '沒有下雨'
+                msg = e[0] + '沒有下雨[' +e[4] + ']'
             }else{
                 msg = '資料錯誤或該地區無觀測站，請指定地區如 松山下雨'
             }
