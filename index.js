@@ -184,15 +184,7 @@ function analysisMsg(event) {
 
 //測試中的功能
 //////-----------------------------------------------
-request('http://www.cwb.gov.tw/V7/forecast/taiwan/Taipei_City.htm', (err, res, body) => {
-  // 把 body 放進 cheerio 準備分析
-const $ = cheerio.load(body)
-let weathers = []
-$('#box8 .FcstBoxTable01 tbody tr').each(function(i, elem) {
-  weathers.push($(this).text().split('\n'))
-})
-console.log(weathers)
-})
+
 //-----------------------------------------------------
 //以下功能未完成
 

@@ -57,7 +57,7 @@ function _getPM25Txt(txt) {//取得地區資料
   }
   pm2_5.forEach(function(e, i) {
     if (txt.indexOf(e[0]) != -1) {
-      return e[0] + '的 PM2.5 數值為 ' + e[1]+',時間:'+e[2];
+      return e[0] + ' PM2.5: ' + e[1]+'  ['+e[2]+']';
     }
   });
   return '請輸入正確的地點 如 "松山的PM2.5"';
