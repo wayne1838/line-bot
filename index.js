@@ -21,7 +21,7 @@ let bot = linebot({
 //設定有權限的使用者ID
 let agreeID = ["Uf4bd6364fa8f00a5d8b779d8173b5ab7","Uef5b83b111745ae5d6c9198b61363d44"];
 
-
+ var ownerId = "Uf4bd6364fa8f00a5d8b779d8173b5ab7";
 
 
 const linebotParser = bot.parser(),
@@ -32,9 +32,8 @@ let server = app.listen(process.env.PORT || 3000, function() {
     let port = server.address().port;
     console.log("My Line bot App running on port", port);
      setTimeout(function(){
-        var userId = "Uf4bd6364fa8f00a5d8b779d8173b5ab7";
         var sendMsg = '開啟';
-        bot.push(userId,sendMsg);
+        bot.push(ownerId,sendMsg);
         console.log('send: '+sendMsg);
     },5000);
 
@@ -47,8 +46,22 @@ let server = app.listen(process.env.PORT || 3000, function() {
 });
 
 
+function doHoursWork(){//每小時執行
+	var myDate = new Date();
 
+	if(myDate.getHours() == 7){//早上七點通知
+		
+	    bot.push(ownerId,PM2_5._getPM25Txt("松山"));
+	    bot.push(ownerId,PM2_5._getRainTxt("松山"));
+	}
 
+};
+
+setInterval(doHoursWork, 3600000);
+function do10MinutesWork(){//每10分鐘執行
+
+};
+setInterval(do10MinutesWork, 600000);
 
 
 
@@ -84,43 +97,11 @@ function analysisMsg(event) {
 
     //pm2.5
     if (txt.indexOf('PM2.5') != -1) {
-    	if (PM2_5.pm2_5.length == 0 ) return common.replayMsg(event,"來源錯誤");
-        PM2_5.pm2_5.forEach(function(e, i) {
-          if (txt.indexOf(e[0]) != -1) {
-            msg = e[0] + '的 PM2.5 數值為 ' + e[1]+',時間:'+e[2];
-            return common.replayMsg(event,msg);
-          }
-        });
-        if (msg == '') {
-          msg = '請輸入正確的地點 如 "松山的PM2.5"';
-          return common.replayMsg(event,msg);
-        }
+          return common.replayMsg(event,PM2_5._getPM25Txt(txt));
       }
-
+      //下雨
     if (txt.indexOf('下雨') != -1 || txt.indexOf('rain') != -1) {
-    	if (PM2_5.rainData.length == 0 ) return common.replayMsg(event,"來源錯誤");
-        PM2_5.rainData.forEach(function(e, i) {
-          if (txt.indexOf(e[0]) != -1) {
-            if (e[1] > 0) { 
-                msg = e[0] + '正在下雨[' +e[4] + ']'
-            }else if (e[2] > 0){
-                msg = e[0] + '一小時內曾經下雨[' +e[4] + ']'
-            }else if (e[3] > 0){
-                msg = e[0] + '不久前曾經下雨[' +e[4] + ']'
-            }else if (e[3] == 0){
-                msg = e[0] + '沒有下雨[' +e[4] + ']'
-            }else{
-
-                console.log(e[3]);
-                msg = '資料錯誤或該地區無觀測站，請指定地區如 松山下雨'
-            }
-            return common.replayMsg(event,msg);
-          }
-        });
-        if (msg == '') {
-          msg = '請輸入正確的地點 如 "松山下雨"';
-          return common.replayMsg(event,msg);
-        }
+    	return common.replayMsg(event,PM2_5._getRainTxt(txt));
       }
 
     switch(txt.toLowerCase()) {

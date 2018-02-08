@@ -51,9 +51,44 @@ function _getRain() {
   timerRain = setInterval(_getRain, 30000); //每半小時抓取一次新資料
 }
 
+function _getPM25Txt(txt) {//取得地區資料
+  if (PM2_5.pm2_5.length == 0 ) {
+    return common.replayMsg(event,"來源錯誤");
+  }
+  pm2_5.forEach(function(e, i) {
+    if (txt.indexOf(e[0]) != -1) {
+      return e[0] + '的 PM2.5 數值為 ' + e[1]+',時間:'+e[2];
+    }
+  });
+  return '請輸入正確的地點 如 "松山的PM2.5"';
+};
 
+function _getRainTxt(txt) {//取得地區資料
+  if (rainData.length == 0 ) {
+    return "來源錯誤";
+  }
+   rainData.forEach(function(e, i) {
+    if (txt.indexOf(e[0]) != -1) {
+      if (e[1] > 0) { 
+        return e[0] + '正在下雨[' +e[4] + ']';
+      }else if (e[2] > 0){
+          eturn e[0] + '一小時內曾經下雨[' +e[4] + ']';
+      }else if (e[3] > 0){
+        return e[0] + '不久前曾經下雨[' +e[4] + ']';
+      }else if (e[3] == 0){
+        return e[0] + '沒有下雨[' +e[4] + ']';
+      }else{
+        console.log(e[3]);
+        return '資料錯誤或該地區無資料';
+      }
+    }
+  });
+  return'請輸入正確的地點 如 "松山下雨"';
+}
 
 exports.pm2_5 =  pm2_5;
 exports._getJSON =  _getJSON;
 exports.rainData =  rainData;
 exports._getRain =  _getRain;
+exports._getPM25Txt =  _getPM25Txt;
+exports._getRainTxt =  _getRainTxt;
