@@ -129,6 +129,8 @@ function analysisMsg(event) {
         return common.replayImg(event,imgs);
     case '2':
         msg =  "安安，怎麼了??"
+        PM2_5._getJSON();//取得pm2.5內容
+    	PM2_5._getRain();
         //getimg.start(); 測試中
         return common.replayMsg(event,msg);
     case '你好':
