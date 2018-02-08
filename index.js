@@ -84,6 +84,7 @@ function analysisMsg(event) {
 
     //pm2.5
     if (txt.indexOf('PM2.5') != -1) {
+    	if (PM2_5.pm2_5.length == 0 ) return common.replayMsg(event,"來源錯誤");
         PM2_5.pm2_5.forEach(function(e, i) {
           if (txt.indexOf(e[0]) != -1) {
             msg = e[0] + '的 PM2.5 數值為 ' + e[1]+',時間:'+e[2];
@@ -97,6 +98,7 @@ function analysisMsg(event) {
       }
 
     if (txt.indexOf('下雨') != -1 || txt.indexOf('rain') != -1) {
+    	if (PM2_5.rainData.length == 0 ) return common.replayMsg(event,"來源錯誤");
         PM2_5.rainData.forEach(function(e, i) {
           if (txt.indexOf(e[0]) != -1) {
             if (e[1] > 0) { 
@@ -114,7 +116,7 @@ function analysisMsg(event) {
           }
         });
         if (msg == '') {
-          msg = '請輸入正確的地點 如 "松山的PM2.5"';
+          msg = '請輸入正確的地點 如 "松山下雨"';
           return common.replayMsg(event,msg);
         }
       }
