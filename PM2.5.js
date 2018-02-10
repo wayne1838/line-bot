@@ -42,7 +42,6 @@ function _getRain() {
       rainData[i][2] = e.Rainfall1hr ;
       rainData[i][3] = e.Rainfall3hr ;
       rainData[i][4] = e.PublishTime ;
-      console.log("Rain"+ e.SiteName);
     });
   });
   // if (rainData == ""){//取得資料失敗 三十秒重試
@@ -78,7 +77,6 @@ function _getRainTxt(txt) {//取得地區資料
       }else if (e[3] == 0){
         return e[0] + '沒有下雨[' +e[4] + ']';
       }else{
-        console.log(e[3]);
         return '資料錯誤或該地區無資料';
       }
     }
