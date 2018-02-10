@@ -25,7 +25,7 @@ function _getJSON() {
   // if (pm2_5 == ""){//取得資料失敗 三十秒重試
   //   timer = setInterval(_getJSON, 30000);
   // }
-  timer = setInterval(_getJSON, 30000); //每半小時抓取一次新資料
+  timer = setInterval(_getJSON, 180000); //每半小時抓取一次新資料
 }
 //下雨 氣象meteorology  http://opendata.epa.gov.tw/ws/Data/RainTenMin/?$orderby=PublishTime%20desc&$skip=0&$top=1000&format=json
 function _getRain() {
@@ -46,12 +46,12 @@ function _getRain() {
   // if (rainData == ""){//取得資料失敗 三十秒重試
   //   timer = setInterval(_getRain, 30000);
   // }
-  timerRain = setInterval(_getRain, 30000); //每半小時抓取一次新資料
+  timerRain = setInterval(_getRain, 180000); //每半小時抓取一次新資料
 }
 
 function _getPM25Txt(txt) {//取得地區資料
   if (pm2_5.length == 0 ) {
-    return common.replayMsg(event,"來源錯誤");
+    return "來源錯誤";
   }
   pm2_5.forEach(function(e, i) {
     if (txt.indexOf(e[0]) != -1) {
