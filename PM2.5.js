@@ -13,7 +13,10 @@ function _getJSON() {
   clearTimeout(timer);
   //http://opendata2.epa.gov.tw/AQX.json--這網址好像是假資料?
   getJSON('http://opendata.epa.gov.tw/ws/Data/ATM00625/?$format=json', function(error, response) {
-    if (!response) {return;}
+    if (error || !response) {
+      setInterval(_getJSON, 30000);//失敗30S重試
+      return;
+    }
     response.forEach(function(e, i) {
       pm2_5[i] = [];
       pm2_5[i][0] = e.Site;
@@ -31,9 +34,11 @@ function _getJSON() {
 function _getRain() {
  console.log("Rain");
   clearTimeout(timerRain);
-  //http://opendata2.epa.gov.tw/AQX.json--這網址好像是假資料?
   getJSON('http://opendata.epa.gov.tw/ws/Data/RainTenMin/?$format=json', function(error, response) {
-     if (!response) {return;}
+    if (error || !response) {
+      setInterval(_getRain , 30000);//失敗30S重試
+      return; 
+    }
     response.forEach(function(e, i) {
       rainData[i] = [];
       rainData[i][0] = e.SiteName;
@@ -41,8 +46,10 @@ function _getRain() {
       rainData[i][2] = e.Rainfall1hr ;
       rainData[i][3] = e.Rainfall3hr ;
       rainData[i][4] = e.PublishTime ;
+      tmp = e.SiteName;
     });
   });
+  
   // if (rainData == ""){//取得資料失敗 三十秒重試
   //   timer = setInterval(_getRain, 30000);
   // }
@@ -50,37 +57,47 @@ function _getRain() {
 }
 
 function _getPM25Txt(txt) {//取得地區資料
+  var msg = "";
   if (pm2_5.length == 0 ) {
     return "來源錯誤";
   }
   pm2_5.forEach(function(e, i) {
     if (txt.indexOf(e[0]) != -1) {
-      return e[0] + ' PM2.5: ' + e[1]+'  ['+e[2]+']';
+      msg =  e[0] + ' PM2.5: ' + e[1]+'  ['+e[2]+']';
     }
   });
-  return '請輸入正確的地點 如 "松山的PM2.5"';
+  if (msg !=""){
+    return msg;
+  }else{
+    return '請輸入正確的地點 如 "松山的PM2.5"';
+  }
 };
 
 function _getRainTxt(txt) {//取得地區資料
+  var msg = "";
   if (rainData.length == 0 ) {
     return "來源錯誤";
   }
    rainData.forEach(function(e, i) {
     if (txt.indexOf(e[0]) != -1) {
       if (e[1] > 0) { 
-        return e[0] + '正在下雨[' +e[4] + ']';
+        msg =  e[0] + '正在下雨[' +e[4] + ']';
       }else if (e[2] > 0){
-          return e[0] + '一小時內曾經下雨[' +e[4] + ']';
+        msg =  e[0] + '一小時內曾經下雨[' +e[4] + ']';
       }else if (e[3] > 0){
-        return e[0] + '不久前曾經下雨[' +e[4] + ']';
+        msg =  e[0] + '不久前曾經下雨[' +e[4] + ']';
       }else if (e[3] == 0){
-        return e[0] + '沒有下雨[' +e[4] + ']';
+        msg =  e[0] + '沒有下雨[' +e[4] + ']';
       }else{
-        return '資料錯誤或該地區無資料';
+        msg =  '資料錯誤或該地區無資料';
       }
     }
   });
+  if (msg !=""){
+    return msg;
+  }else{
   return'請輸入正確的地點 如 "松山下雨"';
+  }
 }
 
 exports.pm2_5 =  pm2_5;
