@@ -51,7 +51,7 @@ function _getRain() {
 }
 
 function _getPM25Txt(txt) {//取得地區資料
-  if (PM2_5.pm2_5.length == 0 ) {
+  if (pm2_5.length == 0 ) {
     return common.replayMsg(event,"來源錯誤");
   }
   pm2_5.forEach(function(e, i) {
