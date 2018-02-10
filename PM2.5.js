@@ -72,7 +72,7 @@ function _getRainTxt(txt) {//取得地區資料
       if (e[1] > 0) { 
         return e[0] + '正在下雨[' +e[4] + ']';
       }else if (e[2] > 0){
-          eturn e[0] + '一小時內曾經下雨[' +e[4] + ']';
+          return e[0] + '一小時內曾經下雨[' +e[4] + ']';
       }else if (e[3] > 0){
         return e[0] + '不久前曾經下雨[' +e[4] + ']';
       }else if (e[3] == 0){
