@@ -19,7 +19,6 @@ function _getJSON() {
       pm2_5[i][0] = e.Site;
       pm2_5[i][1] = e.PM25;
       pm2_5[i][2] = e.DataCreationDate ;
-       console.log("PM25"+ e.Site);
     });
   });
   //console.log("PM");
@@ -30,7 +29,7 @@ function _getJSON() {
 }
 //下雨 氣象meteorology  http://opendata.epa.gov.tw/ws/Data/RainTenMin/?$orderby=PublishTime%20desc&$skip=0&$top=1000&format=json
 function _getRain() {
- 
+ console.log("Rain");
   clearTimeout(timerRain);
   //http://opendata2.epa.gov.tw/AQX.json--這網址好像是假資料?
   getJSON('http://opendata.epa.gov.tw/ws/Data/RainTenMin/?$format=json', function(error, response) {
