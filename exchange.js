@@ -63,9 +63,9 @@ function reExhangeMsg(event,currency) {//即時取得資料 回傳對話
         // 爬完網頁後要做的事情
         var $ = cheerio.load(body);
         var target = $(".rate-content-sight.text-right.print_hide");
-        target.forEach(function(e) {
-            currencyData[i] = e.children[0].data;
-            });
+        // target.forEach(function(e) {
+        //     currencyData[i] = e.children[0].data;
+        //     });
         var msg = currency+"/TWD 匯率:"+target[currencyNum].children[0].data;
         //var msg = currency+"/TWD 匯率:"+currencyData[currencyNum];
         console.log("GET"+msg);
