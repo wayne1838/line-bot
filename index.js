@@ -2,7 +2,7 @@
 let linebot = require('linebot'),
     express = require('express');
 var common=require("./common.js");
-var PM2_5=require("./pm2.5.js");
+var PM2_5=require("./PM2.5.js");
 var exchange=require("./exchange.js");
 const fs = require("fs"); // 流
 var request = require("request");
@@ -56,8 +56,8 @@ function doHoursWork(){//每小時執行
 	}
 
 };
-
 setInterval(doHoursWork, 3600000);
+
 function do10MinutesWork(){//每10分鐘執行
 
 };
