@@ -29,7 +29,7 @@ let agreeID = ["Uf4bd6364fa8f00a5d8b779d8173b5ab7","Uef5b83b111745ae5d6c9198b613
 
 const linebotParser = bot.parser(),
     app = express();
-app.post('/line', linebotParser);
+app.post('/', linebotParser);
 // 在 localhost 走 8080 port
 let server = app.listen(process.env.PORT || 47144, function() { //defult 3000
     let port = server.address().port;
