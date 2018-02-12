@@ -29,9 +29,14 @@ let agreeID = ["Uf4bd6364fa8f00a5d8b779d8173b5ab7","Uef5b83b111745ae5d6c9198b613
 
 const linebotParser = bot.parser(),
     app = express();
-app.post('/', linebotParser);
+    
+app.get('/',function(req,res){
+    res.send('Hello World!');
+});
+
+app.post('/line', linebotParser);
 // 在 localhost 走 8080 port
-let server = app.listen(process.env.PORT || 47144, function() { //defult 3000
+let server = app.listen(process.env.PORT || 80, function() { //defult 3000
     let port = server.address().port;
     console.log("My Line bot App running on port", port);
      setTimeout(function(){
