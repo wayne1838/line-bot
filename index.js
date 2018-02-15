@@ -10,16 +10,12 @@ var cheerio = require("cheerio");
 var nodemailer = require('nodemailer');
 var imgPTT=require("./img.js");
 var getJSON = require('get-json'); //FOR PM2.5
-
+var db=require("./sql.js");
+var conf=require("./config.js");
 const config = require('./package.json'),
 
     util = require('util');
-let bot = linebot({
-    channelSecret: '2c1016ab2d465bfe3045a6db1718ec6d',
-    channelAccessToken: 'KQktopegf2akiZ5CHi6WJ2bEFea/PaqNNKC7r9I4XaGNQKl6aOH9D1JyqvTatDn/OoY6cmiCB2rIfm11LkesIgLE/T025uWlmlFhOBvX6aF7Ehguw6MV1jXP5RMySzQTIfCZYSXitQtL/U3DDhZEHgdB04t89/1O/w1cDnyilFU='
-});
-//     channelSecret: '64b88340678a07f70f17c4b91de5288a',
-//     channelAccessToken: '6S+SS0i7s65BkHs+ECx01al4LpxZ/7V1D/3eRJYZtZVd26N8R2kN7J2crMNio8udbwwzThbAu6SRRaU0Yyq4Wuh1F46/7KoKuMM1YBS4BofNyNsXvplWJx2KmA9xGdnkqOvr4OaH1C4LcGauKIIB9wdB04t89/1O/w1cDnyilFU='
+let bot = linebot(conf);
 
 //設定有權限的使用者ID
 let agreeID = ["Uf4bd6364fa8f00a5d8b779d8173b5ab7","Uef5b83b111745ae5d6c9198b61363d44"];
@@ -29,19 +25,38 @@ let agreeID = ["Uf4bd6364fa8f00a5d8b779d8173b5ab7","Uef5b83b111745ae5d6c9198b613
 
 const linebotParser = bot.parser(),
     app = express();
-    
+
 app.get('/',function(req,res){
     res.send('Hello World!');
 });
 
+app.get('/getsql', function (req, res, next) {
+    db.selectAll('test', function (err, result) {//查询所有news表的数据
+        console.log('err: '+err);
+    console.log('send: '+result.recordset[0].r1);
+    });
+});
+
+app.get('/getimg', function (req, res, next) {
+    //sql查詢
+    //取得一張隨機照片
+    db.querySql('SELECT top 1 * FROM [dbo].[img] ORDER BY NEWID()','',  
+    function (err, result) { 
+        console.log('err: '+err);
+        console.log('send: '+result.recordset[0].imgUrl);
+        res.send(result.recordset[0].imgUrl);
+    });
+});
+
 app.post('/line', linebotParser);
 // 在 localhost 走 8080 port
-let server = app.listen(process.env.PORT || 80, function() { //defult 3000
+let server = app.listen(process.env.PORT || 3000, function() { //port defult 3000 /heroku 80
     let port = server.address().port;
     console.log("My Line bot App running on port", port);
      setTimeout(function(){
         var sendMsg = '開啟';
         bot.push(ownerId,sendMsg);
+        bot.push('U1eb026dd7325f88ffd1b331b7b6975c2',sendMsg);
         console.log('send: '+sendMsg);
     },5000);
 

@@ -26,6 +26,7 @@
     "http": "0.0.0",
     "https": "^1.0.0",
     "linebot": "^1.4.1",
+    "mssql": "^4.1.0",
     "nodemailer": "^4.4.2",
     "request": "^2.83.0",
     "tedious": "^2.3.1"
