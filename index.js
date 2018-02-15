@@ -31,9 +31,9 @@ app.get('/',function(req,res){
 });
 
 app.get('/getsql', function (req, res, next) {
-    db.selectAll('test', function (err, result) {//查询所有news表的数据
+    db.selectAll('test', function (err, result) {//查询所有test表的数据
         console.log('err: '+err);
-    console.log('send: '+result.recordset[0].r1);
+    res.send(result.recordset);
     });
 });
 
