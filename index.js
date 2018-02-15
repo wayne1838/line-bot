@@ -48,6 +48,16 @@ app.get('/getimg', function (req, res, next) {
     });
 });
 
+app.get('/insert', function (req, res, next) {
+    //sql insert
+    db.querySql('  insert into [dbo].[test] values(\'ccd1\',\'kk\');','',  
+    function (err, result) { 
+        console.log('err: '+err);
+        console.log('send: '+result);
+        res.send(result);
+    });
+});
+
 app.post('/line', linebotParser);
 // 在 localhost 走 8080 port
 let server = app.listen(process.env.PORT || 3000, function() { //port defult 3000 /heroku 80
@@ -120,11 +130,13 @@ function analysisMsg(event) {
 
     //pm2.5
     if (txt.indexOf('PM2.5') != -1) {
-          return common.replayMsg(event,PM2_5._getPM25Txt(txt));
+          // return common.replayMsg(event,PM2_5._getPM25Txt(txt));
+          return PM2_5._getPM25FormSql(event,txt);
       }
       //下雨
     if (txt.indexOf('下雨') != -1 || txt.indexOf('rain') != -1) {
-    	return common.replayMsg(event,PM2_5._getRainTxt(txt));
+    	// return common.replayMsg(event,PM2_5._getRainTxt(txt));
+        return PM2_5._getRainFormSql(event,txt);
       }
 
     switch(txt.toLowerCase()) {
